@@ -1,0 +1,16 @@
+syntax = "v1"
+
+type (
+    LoginRequest struct {
+        phone string            `json:"phone"`
+        verificationCode string `json:"verificationCode"`
+    }
+    LoginResponse struct {
+        userId int64    `json:"userId"`
+        token string    `json:"token"`
+    }
+)
+
+service applet-api {
+  post /login (LoginRequest) returns (LoginResponse)
+}
