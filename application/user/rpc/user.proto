@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+service User {
+  rpc Login(LoginRequest) returns (LoginResponse);
+}
+
+message LoginRequest {
+  string phone = 1; // 手机号
+  string verificationCode = 2; // 短信验证码
+}
+
+message LoginResponse {
+  int64 userId = 1; // 用户id
+  string token = 2; // 用户登录token
+}
