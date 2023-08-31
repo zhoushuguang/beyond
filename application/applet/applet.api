@@ -1,16 +1,52 @@
 syntax = "v1"
 
 type (
-    LoginRequest struct {
-        phone string            `json:"phone"`
-        verificationCode string `json:"verificationCode"`
-    }
-    LoginResponse struct {
-        userId int64    `json:"userId"`
-        token string    `json:"token"`
-    }
+	RegisterRequest {
+		Name             string `json:"name"`
+		Mobile           string `json:"mobile"`
+		Password         string `json:"password"`
+		VerificationCode string `json:"verificationCode"`
+	}
+	RegisterResponse {
+		UserId int64  `json:"userId"`
+		Token  string `json:"token"`
+	}
+	VerificationRequest {
+		Mobile string `json:"mobile"`
+	}
+	VerificationResponse {
+	}
+	LoginRequest {
+		Mobile           string `json:"Mobile"`
+		VerificationCode string `json:"verificationCode"`
+	}
+	LoginResponse {
+		UserId int64  `json:"userId"`
+		Token  string `json:"token"`
+	}
+	UserInfoResponse {
+		UserId int64 `json:"userId"`
+	}
 )
 
+@server (
+	prefix: /v1
+)
 service applet-api {
-  post /login (LoginRequest) returns (LoginResponse)
+	@handler RegisterHandler
+	post /register (RegisterRequest) returns (RegisterResponse)
+	@handler VerificationHandler
+	post /verification (VerificationRequest) returns (VerificationResponse)
+	@handler LoginHandler
+	post /login (LoginRequest) returns (LoginResponse)
+}
+
+@server (
+	prefix: /v1/user
+	signature: true
+	jwt: Auth
+)
+service applet-api {
+	@handler UserInfoHandler
+	get /info returns (UserInfoResponse)
 }
