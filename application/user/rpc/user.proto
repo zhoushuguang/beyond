@@ -5,7 +5,9 @@ option go_package="./service";
 
 service User {
   rpc Register(RegisterRequest) returns (RegisterResponse);
-  rpc Login(LoginRequest) returns (LoginResponse);
+  rpc FindById(FindByIdRequest) returns (FindByIdResponse);
+  rpc FindByMobile(FindByMobileRequest) returns (FindByMobileResponse);
+  rpc SendSms(SendSmsRequest) returns (SendSmsResponse);
 }
 
 
@@ -13,19 +15,40 @@ message RegisterRequest {
   string username = 1;
   string mobile = 2;
   string avatar = 3;
+  string password = 4;
 }
 
 message RegisterResponse {
   int64 userId = 1;
 }
 
-
-message LoginRequest {
-  string phone = 1; // 手机号
-  string verificationCode = 2; // 短信验证码
+message FindByIdRequest {
+  int64 userId = 1;
 }
 
-message LoginResponse {
-  int64 userId = 1; // 用户id
-  string token = 2; // 用户登录token
+message FindByIdResponse {
+  int64 userId = 1;
+  string username = 2;
+  string mobile = 3;
+  string avatar = 4;
 }
+
+message FindByMobileRequest {
+  string mobile = 1;
+}
+
+message FindByMobileResponse {
+  int64 userId = 1;
+  string username = 2;
+  string mobile = 3;
+  string avatar = 4;
+}
+
+message SendSmsRequest {
+  int64 userId = 1;
+  string mobile = 2;
+}
+
+message SendSmsResponse {
+}
+

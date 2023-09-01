@@ -11,11 +11,11 @@ import (
 func UserInfoHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		l := logic.NewUserInfoLogic(r.Context(), svcCtx)
-		err := l.UserInfo()
+		resp, err := l.UserInfo()
 		if err != nil {
 			httpx.ErrorCtx(r.Context(), w, err)
 		} else {
-			httpx.Ok(w)
+			httpx.OkJsonCtx(r.Context(), w, resp)
 		}
 	}
 }

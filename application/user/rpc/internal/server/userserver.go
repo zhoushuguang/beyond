@@ -27,7 +27,17 @@ func (s *UserServer) Register(ctx context.Context, in *service.RegisterRequest) 
 	return l.Register(in)
 }
 
-func (s *UserServer) Login(ctx context.Context, in *service.LoginRequest) (*service.LoginResponse, error) {
-	l := logic.NewLoginLogic(ctx, s.svcCtx)
-	return l.Login(in)
+func (s *UserServer) FindById(ctx context.Context, in *service.FindByIdRequest) (*service.FindByIdResponse, error) {
+	l := logic.NewFindByIdLogic(ctx, s.svcCtx)
+	return l.FindById(in)
+}
+
+func (s *UserServer) FindByMobile(ctx context.Context, in *service.FindByMobileRequest) (*service.FindByMobileResponse, error) {
+	l := logic.NewFindByMobileLogic(ctx, s.svcCtx)
+	return l.FindByMobile(in)
+}
+
+func (s *UserServer) SendSms(ctx context.Context, in *service.SendSmsRequest) (*service.SendSmsResponse, error) {
+	l := logic.NewSendSmsLogic(ctx, s.svcCtx)
+	return l.SendSms(in)
 }

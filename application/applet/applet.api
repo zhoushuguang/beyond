@@ -25,7 +25,9 @@ type (
 		Token  string `json:"token"`
 	}
 	UserInfoResponse {
-		UserId int64 `json:"userId"`
+		UserId   int64  `json:"userId"`
+		Username string `json:"username"`
+		Avatar   string `json:"avatar"`
 	}
 )
 

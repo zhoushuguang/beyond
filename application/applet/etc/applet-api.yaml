@@ -4,3 +4,16 @@ Port: 8888
 Auth:
   AccessSecret: xxxxxxxxxxxxxxxxxxxxxxxxxxxxx
   AccessExpire: 604800
+  RefreshSecret: xxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+  RefreshExpire: 2592000
+  RefreshAfter: 604800
+UserRPC:
+  Etcd:
+    Hosts:
+      - 127.0.0.1:2379
+    Key: order.rpc
+  NonBlock: false
+BizRedis:
+  Host: 127.0.0.1:6379
+  Pass:
+  Type: node
