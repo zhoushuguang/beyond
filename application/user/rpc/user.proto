@@ -1,15 +1,54 @@
 syntax = "proto3";
 
+package service;
+option go_package="./service";
+
 service User {
-  rpc Login(LoginRequest) returns (LoginResponse);
+  rpc Register(RegisterRequest) returns (RegisterResponse);
+  rpc FindById(FindByIdRequest) returns (FindByIdResponse);
+  rpc FindByMobile(FindByMobileRequest) returns (FindByMobileResponse);
+  rpc SendSms(SendSmsRequest) returns (SendSmsResponse);
 }
 
-message LoginRequest {
-  string phone = 1; // 手机号
-  string verificationCode = 2; // 短信验证码
+
+message RegisterRequest {
+  string username = 1;
+  string mobile = 2;
+  string avatar = 3;
+  string password = 4;
 }
 
-message LoginResponse {
-  int64 userId = 1; // 用户id
-  string token = 2; // 用户登录token
+message RegisterResponse {
+  int64 userId = 1;
 }
+
+message FindByIdRequest {
+  int64 userId = 1;
+}
+
+message FindByIdResponse {
+  int64 userId = 1;
+  string username = 2;
+  string mobile = 3;
+  string avatar = 4;
+}
+
+message FindByMobileRequest {
+  string mobile = 1;
+}
+
+message FindByMobileResponse {
+  int64 userId = 1;
+  string username = 2;
+  string mobile = 3;
+  string avatar = 4;
+}
+
+message SendSmsRequest {
+  int64 userId = 1;
+  string mobile = 2;
+}
+
+message SendSmsResponse {
+}
+
