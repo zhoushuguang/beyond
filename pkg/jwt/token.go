@@ -8,20 +8,14 @@ import (
 
 type (
 	TokenOptions struct {
-		AccessSecret  string
-		AccessExpire  int64
-		RefreshSecret string
-		RefreshExpire int64
-		RefreshAfter  int64
-		Fields        map[string]interface{}
+		AccessSecret string
+		AccessExpire int64
+		Fields       map[string]interface{}
 	}
 
 	Token struct {
-		AccessToken   string `json:"access_token"`
-		AccessExpire  int64  `json:"access_expire"`
-		RefreshAfter  int64  `json:"refresh_ffter"`
-		RefreshToken  string `json:"refresh_token"`
-		RefreshExpire int64  `json:"refresh_expire"`
+		AccessToken  string `json:"access_token"`
+		AccessExpire int64  `json:"access_expire"`
 	}
 )
 
@@ -32,16 +26,9 @@ func BuildTokens(opt TokenOptions) (Token, error) {
 	if err != nil {
 		return token, err
 	}
-
-	refreshToken, err := genToken(now, opt.RefreshSecret, opt.Fields, opt.RefreshExpire)
-	if err != nil {
-		return token, err
-	}
 	token.AccessToken = accessToken
 	token.AccessExpire = now + opt.AccessExpire
-	token.RefreshAfter = now + opt.RefreshAfter
-	token.RefreshToken = refreshToken
-	token.RefreshExpire = now + opt.RefreshExpire
+
 	return token, nil
 }
 

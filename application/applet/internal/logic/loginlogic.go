@@ -28,7 +28,3 @@ func (l *LoginLogic) Login(req *types.LoginRequest) (resp *types.LoginResponse, 
 
 	return
 }
-
-func genToken(iat int64, secretKey string, payloads map[string]interface{}, seconds int64) (string, error) {
-	return "", nil
-}

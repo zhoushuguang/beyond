@@ -3,6 +3,7 @@ package logic
 import (
 	"beyond/pkg/util"
 	"context"
+	"fmt"
 	"strconv"
 	"time"
 
@@ -15,9 +16,9 @@ import (
 )
 
 const (
-	prefixVerificationCount = "biz#verification#count#"
+	prefixVerificationCount = "biz#verification#count#%s"
 	verificationLimitPerDay = 10
-	expireActivation        = 60 * 10
+	expireActivation        = 60 * 30
 )
 
 type VerificationLogic struct {
@@ -42,12 +43,13 @@ func (l *VerificationLogic) Verification(req *types.VerificationRequest) (resp *
 	if count > verificationLimitPerDay {
 		return nil, err
 	}
+	// 30分钟内验证码不再变化
 	code, err := getActivationCache(req.Mobile, l.svcCtx.BizRedis)
 	if err != nil {
 		logx.Errorf("getActivationCache mobile: %s error: %v", req.Mobile, err)
 	}
 	if len(code) == 0 {
-		code = util.RandomNumeric(4)
+		code = util.RandomNumeric(6)
 	}
 	_, err = l.svcCtx.UserRPC.SendSms(l.ctx, &user.SendSmsRequest{
 		Mobile: req.Mobile,
@@ -64,14 +66,13 @@ func (l *VerificationLogic) Verification(req *types.VerificationRequest) (resp *
 	err = l.incrVerificationCount(req.Mobile)
 	if err != nil {
 		logx.Errorf("incrVerificationCount mobile: %s error: %v", req.Mobile, err)
-		return nil, err
 	}
 
 	return &types.VerificationResponse{}, nil
 }
 
 func (l *VerificationLogic) getVerificationCount(mobile string) (int, error) {
-	key := prefixVerificationCount + mobile
+	key := fmt.Sprintf(prefixVerificationCount, mobile)
 	val, err := l.svcCtx.BizRedis.Get(key)
 	if err != nil {
 		return 0, err
@@ -84,7 +85,7 @@ func (l *VerificationLogic) getVerificationCount(mobile string) (int, error) {
 }
 
 func (l *VerificationLogic) incrVerificationCount(mobile string) error {
-	key := prefixVerificationCount + mobile
+	key := fmt.Sprintf(prefixVerificationCount, mobile)
 	_, err := l.svcCtx.BizRedis.Incr(key)
 	if err != nil {
 		return err
@@ -94,11 +95,11 @@ func (l *VerificationLogic) incrVerificationCount(mobile string) error {
 }
 
 func getActivationCache(mobile string, rds *redis.Redis) (string, error) {
-	key := prefixActivation + mobile
+	key := fmt.Sprintf(prefixActivation, mobile)
 	return rds.Get(key)
 }
 
 func saveActivationCache(mobile, code string, rds *redis.Redis) error {
-	key := prefixActivation + mobile
+	key := fmt.Sprintf(prefixActivation, mobile)
 	return rds.Setex(key, code, expireActivation)
 }

@@ -1,11 +1,11 @@
 package logic
 
 import (
-	"beyond/application/user/rpc/user"
-	"context"
-
 	"beyond/application/applet/internal/svc"
 	"beyond/application/applet/internal/types"
+	"beyond/application/user/rpc/user"
+	"context"
+	"encoding/json"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -25,9 +25,9 @@ func NewUserInfoLogic(ctx context.Context, svcCtx *svc.ServiceContext) *UserInfo
 }
 
 func (l *UserInfoLogic) UserInfo() (*types.UserInfoResponse, error) {
-	userId, ok := l.ctx.Value(types.UserIdKey).(int64)
-	if !ok {
-		return nil, nil
+	userId, err := l.ctx.Value(types.UserIdKey).(json.Number).Int64()
+	if err != nil {
+		return nil, err
 	}
 	if userId == 0 {
 		return nil, nil

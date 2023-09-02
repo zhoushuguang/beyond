@@ -3,8 +3,8 @@ package svc
 import (
 	"beyond/application/applet/internal/config"
 	"beyond/application/user/rpc/user"
-	"github.com/zeromicro/go-zero/core/stores/redis"
 
+	"github.com/zeromicro/go-zero/core/stores/redis"
 	"github.com/zeromicro/go-zero/zrpc"
 )
 
