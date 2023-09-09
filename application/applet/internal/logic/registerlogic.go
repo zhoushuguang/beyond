@@ -53,7 +53,6 @@ func (l *RegisterLogic) Register(req *types.RegisterRequest) (*types.RegisterRes
 	if err != nil {
 		return nil, err
 	}
-
 	mobile, err := encrypt.EncMobile(req.Mobile)
 	if err != nil {
 		logx.Errorf("EncMobile mobile: %s error: %v", req.Mobile, err)
