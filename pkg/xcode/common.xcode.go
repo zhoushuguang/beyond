@@ -8,6 +8,7 @@ var (
 	AccessDenied       = add(403)
 	NotFound           = add(404)
 	MethodNotAllowed   = add(405)
+	Canceled           = add(498)
 	ServerErr          = add(500)
 	ServiceUnavailable = add(503)
 	Deadline           = add(504)

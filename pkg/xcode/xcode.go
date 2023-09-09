@@ -6,6 +6,7 @@ type XCode interface {
 	Error() string
 	Code() int
 	Message() string
+	Details() []interface{}
 }
 
 type Code int
@@ -20,6 +21,10 @@ func (c Code) Code() int {
 
 func (c Code) Message() string {
 	return c.Error()
+}
+
+func (c Code) Details() []interface{} {
+	return nil
 }
 
 func Equal(code XCode, err error) bool {
