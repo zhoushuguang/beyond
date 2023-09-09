@@ -5,6 +5,7 @@ import (
 	"errors"
 	"strings"
 
+	"beyond/application/applet/internal/code"
 	"beyond/application/applet/internal/svc"
 	"beyond/application/applet/internal/types"
 	"beyond/application/user/rpc/user"
@@ -35,7 +36,7 @@ func NewRegisterLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Register
 func (l *RegisterLogic) Register(req *types.RegisterRequest) (*types.RegisterResponse, error) {
 	req.Name = strings.TrimSpace(req.Name)
 	if len(req.Name) == 0 {
-		return nil, errors.New("name cannot be empty")
+		return nil, code.RegisterNameEmpty
 	}
 	req.Mobile = strings.TrimSpace(req.Mobile)
 	if len(req.Mobile) == 0 {
