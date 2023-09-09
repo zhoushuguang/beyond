@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+package types;
+
+import "google/protobuf/any.proto";
+
+option go_package = "beyond/pkg/xcode/types;types";
+
+message Status {
+  int32 code = 1;
+  string message = 2;
+  repeated google.protobuf.Any details = 3;
+}

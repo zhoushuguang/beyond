@@ -4,6 +4,7 @@ import (
 	"context"
 	"time"
 
+	"beyond/application/user/rpc/internal/code"
 	"beyond/application/user/rpc/internal/model"
 	"beyond/application/user/rpc/internal/svc"
 	"beyond/application/user/rpc/service"
@@ -26,6 +27,11 @@ func NewRegisterLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Register
 }
 
 func (l *RegisterLogic) Register(in *service.RegisterRequest) (*service.RegisterResponse, error) {
+	// 当注册名字为空的时候，返回业务自定义错误码
+	if len(in.Username) == 0 {
+		return nil, code.RegisterNameEmpty
+	}
+
 	ret, err := l.svcCtx.UserModel.Insert(l.ctx, &model.User{
 		Username: in.Username,
 		Mobile:   in.Mobile,
