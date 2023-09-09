@@ -3,7 +3,7 @@ package interceptors
 import (
 	"context"
 
-	"beyond/pkg/status"
+	"beyond/pkg/xcode"
 
 	"google.golang.org/grpc"
 )
@@ -11,6 +11,6 @@ import (
 func ServerErrorInterceptor() grpc.UnaryServerInterceptor {
 	return func(ctx context.Context, req interface{}, info *grpc.UnaryServerInfo, handler grpc.UnaryHandler) (resp interface{}, err error) {
 		resp, err = handler(ctx, req)
-		return resp, status.FromError(err).Err()
+		return resp, xcode.FromError(err).Err()
 	}
 }
