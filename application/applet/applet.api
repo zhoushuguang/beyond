@@ -52,3 +52,14 @@ service applet-api {
 	@handler UserInfoHandler
 	get /info returns (UserInfoResponse)
 }
+
+@server (
+    prefix: /v1/article
+    timeout: 1s
+)
+service applet-api {
+    @handler ArticleListHandler
+    get /list returns (ArticleListResponse)
+    @handler ArticleDetailHandler
+    get /detail returns (ArticleDetailResponse)
+}
