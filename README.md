@@ -1,6 +1,8 @@
 # beyond
 
-## wechat 15951703783
+## WeChat
+
+15951703783 备注：我爱golang
 
 ### 第一期文档地址
 https://pwmzlkcu3p.feishu.cn/docx/HsMIdfEa0ogEvmxCpRrcEOyenqc
