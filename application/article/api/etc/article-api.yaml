@@ -1,0 +1,11 @@
+Name: applet-api
+Host: 0.0.0.0
+Port: 8080
+Auth:
+  AccessSecret: 5J8J6XJ4Y
+  AccessExpire: 3600
+Oss:
+  Endpoint: xxx
+  AccessKeyId: xxx
+  AccessKeySecret: xxx
+  BucketName: xxx
