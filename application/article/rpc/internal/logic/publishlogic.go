@@ -2,6 +2,7 @@ package logic
 
 import (
 	"context"
+	"time"
 
 	"beyond/application/article/rpc/internal/model"
 	"beyond/application/article/rpc/internal/svc"
@@ -31,6 +32,9 @@ func (l *PublishLogic) Publish(in *pb.PublishRequest) (*pb.PublishResponse, erro
 		Content:     in.Content,
 		Description: in.Description,
 		Cover:       in.Cover,
+		PublishTime: time.Now(),
+		CreateTime:  time.Now(),
+		UpdateTime:  time.Now(),
 	})
 	if err != nil {
 		l.Logger.Errorf("Publish Insert req: %v error: %v", in, err)

@@ -30,7 +30,7 @@ func NewUserModel(conn sqlx.SqlConn, c cache.CacheConf, opts ...cache.Option) Us
 }
 
 func (m *customUserModel) FindByMobile(ctx context.Context, mobile string) (*User, error) {
-	var user *User
+	var user User
 	err := m.QueryRowNoCacheCtx(ctx, &user, fmt.Sprintf("select %s from %s where `mobile` = ? limit 1", userRows, m.table), mobile)
 	if err != nil {
 		if err == sqlx.ErrNotFound {
@@ -39,5 +39,5 @@ func (m *customUserModel) FindByMobile(ctx context.Context, mobile string) (*Use
 		return nil, err
 	}
 
-	return user, nil
+	return &user, nil
 }

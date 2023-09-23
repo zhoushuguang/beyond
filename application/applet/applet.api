@@ -1,15 +1,19 @@
 syntax = "v1"
 
 type (
+	Token {
+		AccessToken  string `json:"access_token"`
+		AccessExpire int64  `json:"access_expire"`
+	}
 	RegisterRequest {
 		Name             string `json:"name"`
 		Mobile           string `json:"mobile"`
 		Password         string `json:"password"`
-		VerificationCode string `json:"verificationCode"`
+		VerificationCode string `json:"verification_code"`
 	}
 	RegisterResponse {
-		UserId int64  `json:"userId"`
-		Token  string `json:"token"`
+		UserId int64 `json:"user_id"`
+		Token  Token `json:"token"`
 	}
 	VerificationRequest {
 		Mobile string `json:"mobile"`
@@ -17,15 +21,15 @@ type (
 	VerificationResponse {
 	}
 	LoginRequest {
-		Mobile           string `json:"Mobile"`
-		VerificationCode string `json:"verificationCode"`
+		Mobile           string `json:"mobile"`
+		VerificationCode string `json:"verification_code"`
 	}
 	LoginResponse {
-		UserId int64  `json:"userId"`
-		Token  string `json:"token"`
+		UserId int64 `json:"userId"`
+		Token  Token `json:"token"`
 	}
 	UserInfoResponse {
-		UserId   int64  `json:"userId"`
+		UserId   int64  `json:"user_id"`
 		Username string `json:"username"`
 		Avatar   string `json:"avatar"`
 	}
@@ -51,15 +55,4 @@ service applet-api {
 service applet-api {
 	@handler UserInfoHandler
 	get /info returns (UserInfoResponse)
-}
-
-@server (
-    prefix: /v1/article
-    timeout: 1s
-)
-service applet-api {
-    @handler ArticleListHandler
-    get /list returns (ArticleListResponse)
-    @handler ArticleDetailHandler
-    get /detail returns (ArticleDetailResponse)
 }
