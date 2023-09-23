@@ -3,16 +3,17 @@ module beyond
 go 1.21.0
 
 require (
+	github.com/aliyun/aliyun-oss-go-sdk v2.2.9+incompatible
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/golang/protobuf v1.5.3
 	github.com/pkg/errors v0.9.1
+	github.com/zeromicro/go-queue v1.1.8
 	github.com/zeromicro/go-zero v1.5.5
 	google.golang.org/grpc v1.57.0
 	google.golang.org/protobuf v1.31.0
 )
 
 require (
-	github.com/aliyun/aliyun-oss-go-sdk v2.2.9+incompatible // indirect
 	github.com/beorn7/perks v1.0.1 // indirect
 	github.com/cenkalti/backoff/v4 v4.2.0 // indirect
 	github.com/cespare/xxhash/v2 v2.2.0 // indirect
@@ -56,7 +57,6 @@ require (
 	github.com/prometheus/procfs v0.10.1 // indirect
 	github.com/segmentio/kafka-go v0.4.38 // indirect
 	github.com/spaolacci/murmur3 v1.1.0 // indirect
-	github.com/zeromicro/go-queue v1.1.8 // indirect
 	go.etcd.io/etcd/api/v3 v3.5.9 // indirect
 	go.etcd.io/etcd/client/pkg/v3 v3.5.9 // indirect
 	go.etcd.io/etcd/client/v3 v3.5.9 // indirect

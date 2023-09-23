@@ -5,7 +5,13 @@ Auth:
   AccessSecret: 5J8J6XJ4Y
   AccessExpire: 3600
 Oss:
-  Endpoint: xxx
-  AccessKeyId: xxx
-  AccessKeySecret: xxx
-  BucketName: xxx
+  Endpoint: oss-cn-shanghai.aliyuncs.com
+  AccessKeyId: LTAI5tQnhBMMBy2c616FWY4X
+  AccessKeySecret: jLtcZziRwGvWxC3YEbrZQPdkVhGhly
+  BucketName: beyond-article
+ArticleRPC:
+  Etcd:
+    Hosts:
+      - 127.0.0.1:2379
+    Key: article.rpc
+  NonBlock: true

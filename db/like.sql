@@ -10,7 +10,7 @@ CREATE TABLE `like_record` (
     `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
     `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '最后修改时间',
     PRIMARY KEY (`id`),
-    KEY `ix_mtime` (`update_time`),
+    KEY `ix_update_time` (`update_time`),
     UNIQUE KEY `uk_biz_obj_uid` (`biz_id`,`obj_id`,`user_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin COMMENT='点赞记录表';
 
@@ -23,6 +23,6 @@ CREATE TABLE `like_count` (
     `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
     `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '最后修改时间',
     PRIMARY KEY (`id`),
-    KEY `ix_mtime` (`update_time`),
+    KEY `ix_update_time` (`update_time`),
     UNIQUE KEY `uk_biz_obj` (`biz_id`,`obj_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin COMMENT='点赞计数表';
