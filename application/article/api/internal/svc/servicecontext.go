@@ -2,8 +2,10 @@ package svc
 
 import (
 	"beyond/application/article/api/internal/config"
+	"beyond/application/article/rpc/article"
 
 	"github.com/aliyun/aliyun-oss-go-sdk/oss"
+	"github.com/zeromicro/go-zero/zrpc"
 )
 
 const (
@@ -12,8 +14,9 @@ const (
 )
 
 type ServiceContext struct {
-	Config    config.Config
-	OssClient *oss.Client
+	Config     config.Config
+	OssClient  *oss.Client
+	ArticleRPC article.Article
 }
 
 func NewServiceContext(c config.Config) *ServiceContext {
@@ -30,7 +33,8 @@ func NewServiceContext(c config.Config) *ServiceContext {
 	}
 
 	return &ServiceContext{
-		Config:    c,
-		OssClient: oc,
+		Config:     c,
+		OssClient:  oc,
+		ArticleRPC: article.NewArticle(zrpc.MustNewClient(c.ArticleRPC)),
 	}
 }

@@ -33,11 +33,11 @@ func (l *RegisterLogic) Register(in *service.RegisterRequest) (*service.Register
 	}
 
 	ret, err := l.svcCtx.UserModel.Insert(l.ctx, &model.User{
-		Username: in.Username,
-		Mobile:   in.Mobile,
-		Avatar:   in.Avatar,
-		Ctime:    time.Now(),
-		Mtime:    time.Now(),
+		Username:   in.Username,
+		Mobile:     in.Mobile,
+		Avatar:     in.Avatar,
+		CreateTime: time.Now(),
+		UpdateTime: time.Now(),
 	})
 	if err != nil {
 		logx.Errorf("Register req: %v error: %v", in, err)

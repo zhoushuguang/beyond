@@ -103,3 +103,9 @@ func saveActivationCache(mobile, code string, rds *redis.Redis) error {
 	key := fmt.Sprintf(prefixActivation, mobile)
 	return rds.Setex(key, code, expireActivation)
 }
+
+func delActivationCache(mobile, code string, rds *redis.Redis) error {
+	key := fmt.Sprintf(prefixActivation, mobile)
+	_, err := rds.Del(key)
+	return err
+}

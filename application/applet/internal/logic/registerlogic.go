@@ -3,7 +3,6 @@ package logic
 import (
 	"context"
 	"errors"
-	"fmt"
 	"strings"
 
 	"beyond/application/applet/internal/code"
@@ -14,6 +13,7 @@ import (
 	"beyond/pkg/jwt"
 
 	"github.com/zeromicro/go-zero/core/logx"
+	"github.com/zeromicro/go-zero/core/stores/redis"
 )
 
 const (
@@ -48,8 +48,9 @@ func (l *RegisterLogic) Register(req *types.RegisterRequest) (*types.RegisterRes
 	if len(req.VerificationCode) == 0 {
 		return nil, code.VerificationCodeEmpty
 	}
-	err := l.checkVerificationCode(l.ctx, req.Mobile, req.VerificationCode)
+	err := checkVerificationCode(l.svcCtx.BizRedis, req.Mobile, req.VerificationCode)
 	if err != nil {
+		logx.Errorf("checkVerificationCode error: %v", err)
 		return nil, err
 	}
 	mobile, err := encrypt.EncMobile(req.Mobile)
@@ -57,13 +58,14 @@ func (l *RegisterLogic) Register(req *types.RegisterRequest) (*types.RegisterRes
 		logx.Errorf("EncMobile mobile: %s error: %v", req.Mobile, err)
 		return nil, err
 	}
-	userRet, err := l.svcCtx.UserRPC.FindByMobile(l.ctx, &user.FindByMobileRequest{
+	u, err := l.svcCtx.UserRPC.FindByMobile(l.ctx, &user.FindByMobileRequest{
 		Mobile: mobile,
 	})
 	if err != nil {
+		logx.Errorf("FindByMobile error: %v", err)
 		return nil, err
 	}
-	if userRet != nil && userRet.UserId > 0 {
+	if u != nil && u.UserId > 0 {
 		return nil, code.MobileHasRegistered
 	}
 	regRet, err := l.svcCtx.UserRPC.Register(l.ctx, &user.RegisterRequest{
@@ -71,10 +73,9 @@ func (l *RegisterLogic) Register(req *types.RegisterRequest) (*types.RegisterRes
 		Mobile:   mobile,
 	})
 	if err != nil {
-		fmt.Printf("register err %v\n", err)
+		logx.Errorf("Register error: %v", err)
 		return nil, err
 	}
-
 	token, err := jwt.BuildTokens(jwt.TokenOptions{
 		AccessSecret: l.svcCtx.Config.Auth.AccessSecret,
 		AccessExpire: l.svcCtx.Config.Auth.AccessExpire,
@@ -83,17 +84,23 @@ func (l *RegisterLogic) Register(req *types.RegisterRequest) (*types.RegisterRes
 		},
 	})
 	if err != nil {
+		logx.Errorf("BuildTokens error: %v", err)
 		return nil, err
 	}
 
+	_ = delActivationCache(req.Mobile, req.VerificationCode, l.svcCtx.BizRedis)
+
 	return &types.RegisterResponse{
 		UserId: regRet.UserId,
-		Token:  token,
+		Token: types.Token{
+			AccessToken:  token.AccessToken,
+			AccessExpire: token.AccessExpire,
+		},
 	}, nil
 }
 
-func (l *RegisterLogic) checkVerificationCode(ctx context.Context, mobile, code string) error {
-	cacheCode, err := getActivationCache(mobile, l.svcCtx.BizRedis)
+func checkVerificationCode(rds *redis.Redis, mobile, code string) error {
+	cacheCode, err := getActivationCache(mobile, rds)
 	if err != nil {
 		return err
 	}

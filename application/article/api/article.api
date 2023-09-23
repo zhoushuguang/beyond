@@ -4,6 +4,17 @@ type (
 	UploadCoverResponse {
 		CoverUrl string `json:"cover_url"`
 	}
+
+	PublishRequest {
+		Title       string `json:"title"`
+		Content     string `json:"content"`
+		Description string `json:"description"`
+		Cover       string `json:"cover"`
+	}
+
+	PublishResponse {
+		ArticleId int64 `json:"article_id"`
+	}
 )
 
 @server (
@@ -13,4 +24,6 @@ type (
 service article-api {
 	@handler UploadCoverHandler
 	post /upload/cover returns (UploadCoverResponse)
+	@handler PublishHandler
+	post /publish (PublishRequest) returns (PublishResponse)
 }
