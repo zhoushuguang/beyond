@@ -1,0 +1,16 @@
+syntax = "v1"
+
+type (
+	UploadCoverResponse {
+		CoverUrl string `json:"cover_url"`
+	}
+)
+
+@server (
+	prefix: /v1/article
+	jwt: Auth
+)
+service article-api {
+	@handler UploadCoverHandler
+	post /upload/cover returns (UploadCoverResponse)
+}
