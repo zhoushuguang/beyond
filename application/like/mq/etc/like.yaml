@@ -1,10 +1,10 @@
 Name: mq
 KqConsumerConf:
-  Name: kqConsumer
+  Name: like-kq-consumer
   Brokers:
     - 127.0.1:9092
-  Group: kqConsumer
-  Topic: payment-success
-  Offset: first
-  Consumers: 8
-  Processors: 8
+  Group: group-beyond-like
+  Topic: topic-beyond-like
+  Offset: last
+  Consumers: 1
+  Processors: 1
