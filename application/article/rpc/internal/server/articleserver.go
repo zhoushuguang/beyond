@@ -26,3 +26,8 @@ func (s *ArticleServer) Publish(ctx context.Context, in *pb.PublishRequest) (*pb
 	l := logic.NewPublishLogic(ctx, s.svcCtx)
 	return l.Publish(in)
 }
+
+func (s *ArticleServer) Articles(ctx context.Context, in *pb.ArticlesRequest) (*pb.ArticlesResponse, error) {
+	l := logic.NewArticlesLogic(ctx, s.svcCtx)
+	return l.Articles(in)
+}

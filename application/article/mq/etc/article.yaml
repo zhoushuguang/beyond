@@ -1,0 +1,11 @@
+Name: mq
+KqConsumerConf:
+  Name: article-kq-consumer
+  Brokers:
+    - 127.0.1:9092
+  Group: group-like-count
+  Topic: topic-like-count
+  Offset: last
+  Consumers: 1
+  Processors: 1
+Datasource: root:Zsg123456@tcp(127.0.0.1:3306)/beyond_article?parseTime=true

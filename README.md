@@ -46,3 +46,14 @@ https://pwmzlkcu3p.feishu.cn/docx/O1u3d9pqWo4sZTx6NTxcOHhknmd
 #### 视频
 https://www.bilibili.com/video/BV1F84y1S74g/
 
+### 第七课
+#### 文档
+https://pwmzlkcu3p.feishu.cn/docx/SvSwdAETNo3F0Axznp8ceaX1nIb
+#### 视频
+https://www.bilibili.com/video/BV1sz4y1G73u/
+
+### 第八课
+#### 文档
+https://pwmzlkcu3p.feishu.cn/docx/At4zdJzrFowGMmx5OjJcrS5mnir
+#### 视频
+

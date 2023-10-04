@@ -23,6 +23,7 @@ const _ = grpc.SupportPackageIsVersion7
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type ArticleClient interface {
 	Publish(ctx context.Context, in *PublishRequest, opts ...grpc.CallOption) (*PublishResponse, error)
+	Articles(ctx context.Context, in *ArticlesRequest, opts ...grpc.CallOption) (*ArticlesResponse, error)
 }
 
 type articleClient struct {
@@ -42,11 +43,21 @@ func (c *articleClient) Publish(ctx context.Context, in *PublishRequest, opts ..
 	return out, nil
 }
 
+func (c *articleClient) Articles(ctx context.Context, in *ArticlesRequest, opts ...grpc.CallOption) (*ArticlesResponse, error) {
+	out := new(ArticlesResponse)
+	err := c.cc.Invoke(ctx, "/pb.Article/Articles", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // ArticleServer is the server API for Article service.
 // All implementations must embed UnimplementedArticleServer
 // for forward compatibility
 type ArticleServer interface {
 	Publish(context.Context, *PublishRequest) (*PublishResponse, error)
+	Articles(context.Context, *ArticlesRequest) (*ArticlesResponse, error)
 	mustEmbedUnimplementedArticleServer()
 }
 
@@ -56,6 +67,9 @@ type UnimplementedArticleServer struct {
 
 func (UnimplementedArticleServer) Publish(context.Context, *PublishRequest) (*PublishResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Publish not implemented")
+}
+func (UnimplementedArticleServer) Articles(context.Context, *ArticlesRequest) (*ArticlesResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Articles not implemented")
 }
 func (UnimplementedArticleServer) mustEmbedUnimplementedArticleServer() {}
 
@@ -88,6 +102,24 @@ func _Article_Publish_Handler(srv interface{}, ctx context.Context, dec func(int
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Article_Articles_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ArticlesRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ArticleServer).Articles(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/pb.Article/Articles",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ArticleServer).Articles(ctx, req.(*ArticlesRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Article_ServiceDesc is the grpc.ServiceDesc for Article service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -98,6 +130,10 @@ var Article_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "Publish",
 			Handler:    _Article_Publish_Handler,
+		},
+		{
+			MethodName: "Articles",
+			Handler:    _Article_Articles_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
