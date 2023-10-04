@@ -13,11 +13,15 @@ import (
 )
 
 type (
-	PublishRequest  = pb.PublishRequest
-	PublishResponse = pb.PublishResponse
+	ArticleItem      = pb.ArticleItem
+	ArticlesRequest  = pb.ArticlesRequest
+	ArticlesResponse = pb.ArticlesResponse
+	PublishRequest   = pb.PublishRequest
+	PublishResponse  = pb.PublishResponse
 
 	Article interface {
 		Publish(ctx context.Context, in *PublishRequest, opts ...grpc.CallOption) (*PublishResponse, error)
+		Articles(ctx context.Context, in *ArticlesRequest, opts ...grpc.CallOption) (*ArticlesResponse, error)
 	}
 
 	defaultArticle struct {
@@ -34,4 +38,9 @@ func NewArticle(cli zrpc.Client) Article {
 func (m *defaultArticle) Publish(ctx context.Context, in *PublishRequest, opts ...grpc.CallOption) (*PublishResponse, error) {
 	client := pb.NewArticleClient(m.cli.Conn())
 	return client.Publish(ctx, in, opts...)
+}
+
+func (m *defaultArticle) Articles(ctx context.Context, in *ArticlesRequest, opts ...grpc.CallOption) (*ArticlesResponse, error) {
+	client := pb.NewArticleClient(m.cli.Conn())
+	return client.Articles(ctx, in, opts...)
 }
