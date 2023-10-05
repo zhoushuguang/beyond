@@ -12,3 +12,13 @@ type CanalLikeMsg struct {
 		UpdateTime string `json:"update_time"`
 	} `json:"data"`
 }
+
+type CanalArticleMsg struct {
+	Data []struct {
+		ID          string `json:"id"`
+		AuthorId    string `json:"author_id"`
+		Status      string `json:"status"`
+		PublishTime string `json:"publish_time"`
+		LikeNum     string `json:"like_num"`
+	}
+}

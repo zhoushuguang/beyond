@@ -95,11 +95,17 @@ func (l *ArticlesLogic) Articles(in *pb.ArticlesRequest) (*pb.ArticlesResponse, 
 			})
 		}
 	} else {
-		articles, err = l.svcCtx.ArticleModel.ArticlesByUserId(l.ctx, in.UserId, sortLikeNum, sortPublishTime, sortField, types.DefaultLimit)
+		v, err, _ := l.svcCtx.SingleFlightGroup.Do(fmt.Sprintf("ArticlesByUserId:%d:%d", in.UserId, in.SortType), func() (interface{}, error) {
+			return l.svcCtx.ArticleModel.ArticlesByUserId(l.ctx, in.UserId, sortLikeNum, sortPublishTime, sortField, types.DefaultLimit)
+		})
 		if err != nil {
 			logx.Errorf("ArticlesByUserId userId: %d sortField: %s error: %v", in.UserId, sortField, err)
 			return nil, err
 		}
+		if v == nil {
+			return &pb.ArticlesResponse{}, nil
+		}
+		articles = v.([]*model.Article)
 		var firstPageArticles []*model.Article
 		if len(articles) > int(in.PageSize) {
 			firstPageArticles = articles[:int(in.PageSize)]
@@ -202,6 +208,16 @@ func articlesKey(uid int64, sortType int32) string {
 
 func (l *ArticlesLogic) cacheArticles(ctx context.Context, uid, cursor, ps int64, sortType int32) ([]int64, error) {
 	key := articlesKey(uid, sortType)
+	b, err := l.svcCtx.BizRedis.ExistsCtx(ctx, key)
+	if err != nil {
+		logx.Errorf("ExistsCtx key: %s error: %v", key, err)
+	}
+	if b {
+		err = l.svcCtx.BizRedis.ExpireCtx(ctx, key, articlesExpire)
+		if err != nil {
+			logx.Errorf("ExpireCtx key: %s error: %v", key, err)
+		}
+	}
 	pairs, err := l.svcCtx.BizRedis.ZrevrangebyscoreWithScoresAndLimitCtx(ctx, key, 0, cursor, 0, int(ps))
 	if err != nil {
 		logx.Errorf("ZrevrangebyscoreWithScoresAndLimit key: %s error: %v", key, err)

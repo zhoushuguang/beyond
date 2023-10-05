@@ -8,7 +8,7 @@ CREATE TABLE `article` (
     `cover` varchar(255) NOT NULL DEFAULT '' COMMENT '封面',
     `description` varchar(255) NOT NULL DEFAULT '' COMMENT '描述',
     `author_id` bigint(20) UNSIGNED NOT NULL DEFAULT '0' COMMENT '作者ID',
-    `status` tinyint(4) NOT NULL DEFAULT '0' COMMENT '状态 0:待审核 1:审核不通过 2:可见',
+    `status` tinyint(4) NOT NULL DEFAULT '0' COMMENT '状态 0:待审核 1:审核不通过 2:可见 3:用户删除',
     `comment_num` int(11) NOT NULL DEFAULT '0' COMMENT '评论数',
     `like_num` int(11) NOT NULL DEFAULT '0' COMMENT '点赞数',
     `collect_num` int(11) NOT NULL DEFAULT '0' COMMENT '收藏数',

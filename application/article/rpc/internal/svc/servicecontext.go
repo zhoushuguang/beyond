@@ -6,12 +6,14 @@ import (
 
 	"github.com/zeromicro/go-zero/core/stores/redis"
 	"github.com/zeromicro/go-zero/core/stores/sqlx"
+	"golang.org/x/sync/singleflight"
 )
 
 type ServiceContext struct {
-	Config       config.Config
-	ArticleModel model.ArticleModel
-	BizRedis     *redis.Redis
+	Config            config.Config
+	ArticleModel      model.ArticleModel
+	BizRedis          *redis.Redis
+	SingleFlightGroup singleflight.Group
 }
 
 func NewServiceContext(c config.Config) *ServiceContext {
