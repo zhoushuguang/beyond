@@ -8,4 +8,17 @@ KqConsumerConf:
   Offset: last
   Consumers: 1
   Processors: 1
+ArticleKqConsumerConf:
+  Name: article-cache-kq-consumer
+  Brokers:
+    - 127.0.1:9092
+  Group: group-article
+  Topic: topic-article
+  Offset: last
+  Consumers: 1
+  Processors: 1
 Datasource: root:Zsg123456@tcp(127.0.0.1:3306)/beyond_article?parseTime=true
+BizRedis:
+  Host: 127.0.0.1:6379
+  Pass:
+  Type: node

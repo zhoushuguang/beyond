@@ -3,14 +3,14 @@ package logic
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"strconv"
+	"time"
 
 	"beyond/application/article/mq/internal/svc"
 	"beyond/application/article/mq/internal/types"
 
-	"github.com/zeromicro/go-queue/kq"
 	"github.com/zeromicro/go-zero/core/logx"
-	"github.com/zeromicro/go-zero/core/service"
 )
 
 type ArticleLogic struct {
@@ -28,46 +28,60 @@ func NewArticleLogic(ctx context.Context, svcCtx *svc.ServiceContext) *ArticleLo
 }
 
 func (l *ArticleLogic) Consume(_, val string) error {
-	var msg *types.CanalLikeMsg
+	logx.Infof("Consume msg val: %s", val)
+	var msg *types.CanalArticleMsg
 	err := json.Unmarshal([]byte(val), &msg)
 	if err != nil {
 		logx.Errorf("Consume val: %s error: %v", val, err)
 		return err
 	}
 
-	return l.updateArticleLikeNum(l.ctx, msg)
+	return l.articleOperate(l.ctx, msg)
 }
 
-func (l *ArticleLogic) updateArticleLikeNum(ctx context.Context, msg *types.CanalLikeMsg) error {
+func (l *ArticleLogic) articleOperate(ctx context.Context, msg *types.CanalArticleMsg) error {
 	if len(msg.Data) == 0 {
 		return nil
 	}
-
 	for _, d := range msg.Data {
-		if d.BizID != types.ArticleBizID {
-			continue
-		}
-		id, err := strconv.ParseInt(d.ObjID, 10, 64)
-		if err != nil {
-			logx.Errorf("strconv.ParseInt id: %s error: %v", d.ID, err)
-			continue
-		}
-		likeNum, err := strconv.ParseInt(d.LikeNum, 10, 64)
-		if err != nil {
-			logx.Errorf("strconv.ParseInt likeNum: %s error: %v", d.LikeNum, err)
-			continue
-		}
-		err = l.svcCtx.ArticleModel.UpdateLikeNum(ctx, id, likeNum)
-		if err != nil {
-			logx.Errorf("UpdateLikeNum id: %d like: %d", id, likeNum)
+		status, _ := strconv.Atoi(d.Status)
+		likNum, _ := strconv.ParseInt(d.LikeNum, 10, 64)
+
+		t, err := time.ParseInLocation("2006-01-02 15:04:05", d.PublishTime, time.Local)
+		publishTimeKey := articlesKey(d.AuthorId, 0)
+		likeNumKey := articlesKey(d.AuthorId, 1)
+
+		switch status {
+		case types.ArticleStatusVisible:
+			b, _ := l.svcCtx.BizRedis.ExistsCtx(ctx, publishTimeKey)
+			if b {
+				_, err = l.svcCtx.BizRedis.ZaddCtx(ctx, publishTimeKey, t.Unix(), d.ID)
+				if err != nil {
+					l.Logger.Errorf("ZaddCtx key: %s req: %v error: %v", publishTimeKey, d, err)
+				}
+			}
+			b, _ = l.svcCtx.BizRedis.ExistsCtx(ctx, likeNumKey)
+			if b {
+				_, err = l.svcCtx.BizRedis.ZaddCtx(ctx, likeNumKey, likNum, d.ID)
+				if err != nil {
+					l.Logger.Errorf("ZaddCtx key: %s req: %v error: %v", likeNumKey, d, err)
+				}
+			}
+		case types.ArticleStatusUserDelete:
+			_, err = l.svcCtx.BizRedis.ZremCtx(ctx, publishTimeKey, d.ID)
+			if err != nil {
+				logx.Errorf("ZremCtx key: %s req: %v error: %v", publishTimeKey, d, err)
+			}
+			_, err = l.svcCtx.BizRedis.ZremCtx(ctx, likeNumKey, d.ID)
+			if err != nil {
+				logx.Errorf("ZremCtx key: %s req: %v error: %v", likeNumKey, d, err)
+			}
 		}
 	}
 
 	return nil
 }
 
-func Consumers(ctx context.Context, svcCtx *svc.ServiceContext) []service.Service {
-	return []service.Service{
-		kq.MustNewQueue(svcCtx.Config.KqConsumerConf, NewArticleLogic(ctx, svcCtx)),
-	}
+func articlesKey(uid string, sortType int32) string {
+	return fmt.Sprintf("biz#articles#%s#%d", uid, sortType)
 }

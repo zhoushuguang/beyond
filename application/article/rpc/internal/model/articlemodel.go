@@ -2,6 +2,7 @@ package model
 
 import (
 	"context"
+	"database/sql"
 	"fmt"
 	"github.com/zeromicro/go-zero/core/stores/cache"
 	"github.com/zeromicro/go-zero/core/stores/sqlx"
@@ -15,6 +16,7 @@ type (
 	ArticleModel interface {
 		articleModel
 		ArticlesByUserId(ctx context.Context, userId, likeNum int64, pubTime, sortField string, limit int) ([]*Article, error)
+		UpdateArticleStatus(ctx context.Context, id int64, status int) error
 	}
 
 	customArticleModel struct {
@@ -49,4 +51,14 @@ func (m *customArticleModel) ArticlesByUserId(ctx context.Context, userId, likeN
 	}
 
 	return articles, nil
+}
+
+func (m *customArticleModel) UpdateArticleStatus(ctx context.Context, id int64, status int) error {
+	beyondArticleArticleIdKey := fmt.Sprintf("%s%v", cacheBeyondArticleArticleIdPrefix, id)
+	_, err := m.ExecCtx(ctx, func(ctx context.Context, conn sqlx.SqlConn) (sql.Result, error) {
+		query := fmt.Sprintf("update %s set status = ? where `id` = ?", m.table)
+		return conn.ExecCtx(ctx, query, status, id)
+	}, beyondArticleArticleIdKey)
+
+	return err
 }
