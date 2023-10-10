@@ -2,7 +2,7 @@ Name: mq
 KqConsumerConf:
   Name: like-kq-consumer
   Brokers:
-    - 127.0.1:9092
+    - 127.0.0.1:9092
   Group: group-beyond-like
   Topic: topic-beyond-like
   Offset: last
