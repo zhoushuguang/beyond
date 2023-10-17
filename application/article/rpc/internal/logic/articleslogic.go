@@ -1,8 +1,10 @@
 package logic
 
 import (
+	"cmp"
 	"context"
 	"fmt"
+	"slices"
 	"strconv"
 	"time"
 
@@ -84,6 +86,20 @@ func (l *ArticlesLogic) Articles(in *pb.ArticlesRequest) (*pb.ArticlesResponse, 
 		if err != nil {
 			return nil, err
 		}
+
+		// 通过sortFiled对articles进行排序
+		var cmpFunc func(a, b *model.Article) int
+		if sortField == "like_num" {
+			cmpFunc = func(a, b *model.Article) int {
+				return cmp.Compare(b.LikeNum, a.LikeNum)
+			}
+		} else {
+			cmpFunc = func(a, b *model.Article) int {
+				return cmp.Compare(b.PublishTime.Unix(), a.PublishTime.Unix())
+			}
+		}
+		slices.SortFunc(articles, cmpFunc)
+
 		for _, article := range articles {
 			curPage = append(curPage, &pb.ArticleItem{
 				Id:           article.Id,
