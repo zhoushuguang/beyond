@@ -41,7 +41,7 @@ func (l *ThumbupLogic) Thumbup(in *service.ThumbupRequest) (*service.ThumbupResp
 	threading.GoSafe(func() {
 		data, err := json.Marshal(msg)
 		if err != nil {
-			l.Logger.Errorf("[Thumbup] marshal msg: %+v error: %v", msg, err)
+			l.Logger.Errorf("[Thumbup] marshal msg: %v error: %v", msg, err)
 			return
 		}
 		err = l.svcCtx.KqPusherClient.Push(string(data))
