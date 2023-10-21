@@ -42,6 +42,8 @@ func (l *RegisterLogic) Register(req *types.RegisterRequest) (*types.RegisterRes
 	}
 	req.Password = strings.TrimSpace(req.Password)
 	if len(req.Password) == 0 {
+		return nil, code.RegisterPasswdEmpty
+	} else {
 		req.Password = encrypt.EncPassword(req.Password)
 	}
 	req.VerificationCode = strings.TrimSpace(req.VerificationCode)
