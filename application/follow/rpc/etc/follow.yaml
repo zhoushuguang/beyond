@@ -1,0 +1,25 @@
+Name: follow.rpc
+ListenOn: 0.0.0.0:8080
+Etcd:
+  Hosts:
+  - 127.0.0.1:2379
+  Key: follow.rpc
+DB:
+  DataSource: "root:Zsg123456@tcp(127.0.0.1:3306)/beyond_follow?parseTime=true&loc=Local"
+  MaxIdleConns: 10
+  MaxOpenConns: 100
+  ConnMaxLifetime: 3600
+BizRedis:
+  Host: 127.0.0.1:6379
+  Pass:
+  Type: node
+Prometheus:
+  Host: 0.0.0.0
+  Port: 9101
+  Path: /metrics
+Telemetry:
+  Endpoint: http://127.0.0.1:14268/api/traces
+
+
+
+
