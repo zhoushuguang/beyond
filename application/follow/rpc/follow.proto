@@ -60,10 +60,14 @@ message FansListRequest {
 message FansItem {
   int64 userId = 1;
   int64 fansUserId = 2;
-  int64 createTime = 3;
+  int64 followCount = 3;
+  int64 fansCount = 4;
+  int64 createTime = 5;
 }
 
 message FansListResponse {
   repeated FansItem items = 1;
   int64 cursor = 2;
+  bool isEnd = 3;
+  int64 Id = 4;
 }
