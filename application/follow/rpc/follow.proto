@@ -55,6 +55,7 @@ message FansListRequest {
   int64 userId = 1;
   int64 cursor = 2;
   int64 pageSize = 3;
+  int64 Id = 4;
 }
 
 message FansItem {

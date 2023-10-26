@@ -47,41 +47,41 @@ func (l *FansListLogic) FansList(in *pb.FansListRequest) (*pb.FansListResponse, 
 		isCache, isEnd bool
 		lastId, cursor int64
 		fansUserIds    []int64
-		fanss          []*model.Follow
+		fansModel      []*model.Follow
 		curPage        []*pb.FansItem
 	)
-	FansUIds, CreateTime, _ := l.cacheFansUserIds(l.ctx, in.UserId, in.Cursor, in.PageSize)
-	if len(FansUIds) > 0 {
+	fansUIds, createTime, _ := l.cacheFansUserIds(l.ctx, in.UserId, in.Cursor, in.PageSize)
+	if len(fansUIds) > 0 {
 		isCache = true
-		if FansUIds[len(FansUIds)-1] == -1 {
-			FansUIds = FansUIds[:len(FansUIds)-1]
+		if fansUIds[len(fansUIds)-1] == -1 {
+			fansUIds = fansUIds[:len(fansUIds)-1]
 			isEnd = true
 		}
-		if len(FansUIds) == 0 {
+		if len(fansUIds) == 0 {
 			return &pb.FansListResponse{}, nil
 		}
-		fansUserIds = FansUIds
-		for i, fansUId := range FansUIds {
+		fansUserIds = fansUIds
+		for i, fansUId := range fansUIds {
 			curPage = append(curPage, &pb.FansItem{
 				UserId:     in.UserId,
 				FansUserId: fansUId,
-				CreateTime: CreateTime[i],
+				CreateTime: createTime[i],
 			})
 		}
 	} else {
-		fanss, err = l.svcCtx.FollowModel.FindByFollowedUserId(l.ctx, in.UserId, types.CacheMaxFansCount)
+		fansModel, err = l.svcCtx.FollowModel.FindByFollowedUserId(l.ctx, in.UserId, types.CacheMaxFansCount)
 		if err != nil {
 			l.Logger.Errorf("[FansList] FollowModel.FindByFollowedUserId error: %v req: %v", err, in)
 			return nil, err
 		}
-		if len(fanss) == 0 {
+		if len(fansModel) == 0 {
 			return &pb.FansListResponse{}, nil
 		}
 		var firstPageFans []*model.Follow
-		if len(fanss) > int(in.PageSize) {
-			firstPageFans = fanss[:in.PageSize]
+		if len(fansModel) > int(in.PageSize) {
+			firstPageFans = fansModel[:in.PageSize]
 		} else {
-			firstPageFans = fanss
+			firstPageFans = fansModel
 			isEnd = true
 		}
 		for _, fans := range firstPageFans {
@@ -101,7 +101,7 @@ func (l *FansListLogic) FansList(in *pb.FansListRequest) (*pb.FansListResponse, 
 			cursor = 0
 		}
 		for i, fans := range curPage {
-			if fans.CreateTime == in.Cursor {
+			if fans.CreateTime == in.Cursor && fans.FansUserId == in.Id {
 				curPage = curPage[i:]
 				break
 			}
@@ -131,10 +131,10 @@ func (l *FansListLogic) FansList(in *pb.FansListRequest) (*pb.FansListResponse, 
 
 	if !isCache {
 		threading.GoSafe(func() {
-			if len(fanss) < types.CacheMaxFansCount && len(fanss) > 0 {
-				fanss = append(fanss, &model.Follow{UserID: -1})
+			if len(fansModel) < types.CacheMaxFansCount && len(fansModel) > 0 {
+				fansModel = append(fansModel, &model.Follow{UserID: -1})
 			}
-			err = l.addCacheFans(context.Background(), in.UserId, fanss)
+			err = l.addCacheFans(context.Background(), in.UserId, fansModel)
 		})
 	}
 	return ret, nil
