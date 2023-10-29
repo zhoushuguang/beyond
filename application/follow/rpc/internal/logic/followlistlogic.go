@@ -62,7 +62,7 @@ func (l *FollowListLogic) FollowList(in *pb.FollowListRequest) (*pb.FollowListRe
 		if len(followUserIds) == 0 {
 			return &pb.FollowListResponse{}, nil
 		}
-		follows, err = l.svcCtx.FollowModel.FindByFollowedUserIds(l.ctx, followUserIds)
+		follows, err = l.svcCtx.FollowModel.FindByFollowedUserIds(l.ctx, in.UserId, followUserIds)
 		if err != nil {
 			l.Logger.Errorf("[FollowList] FollowModel.FindByFollowedUserIds error: %v req: %v", err, in)
 			return nil, err
