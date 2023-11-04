@@ -26,3 +26,6 @@ CREATE TABLE `article` (
 
 insert into article(title, content, author_id, like_num, publish_time) values ('文章标题1', '文章内容1', 1, 1, '2023-10-04 17:01:01');
 insert into article(title, content, author_id, like_num, publish_time) values ('文章标题2', '文章内容2', 1, 10, '2023-10-04 15:01:01');
+
+
+
