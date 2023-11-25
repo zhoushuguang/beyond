@@ -39,6 +39,7 @@ message ArticleItem {
   int64 commentCount = 6;
   int64 likeCount = 7;
   int64 publishTime = 8;
+  int64 authorId = 9;
 }
 
 message ArticlesResponse {

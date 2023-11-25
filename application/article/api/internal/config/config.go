@@ -1,6 +1,8 @@
 package config
 
 import (
+	"beyond/pkg/consul"
+
 	"github.com/zeromicro/go-zero/rest"
 	"github.com/zeromicro/go-zero/zrpc"
 )
@@ -12,6 +14,7 @@ type Config struct {
 		AccessExpire int64
 	}
 	ArticleRPC zrpc.RpcClientConf
+	UserRPC    zrpc.RpcClientConf
 	Oss        struct {
 		Endpoint         string
 		AccessKeyId      string
@@ -20,4 +23,5 @@ type Config struct {
 		ConnectTimeout   int64 `json:",optional"`
 		ReadWriteTimeout int64 `json:",optional"`
 	}
+	Consul consul.Conf
 }

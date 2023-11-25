@@ -12,3 +12,5 @@ CREATE TABLE `user` (
   KEY `ix_update_time` (`update_time`),
   UNIQUE KEY `uk_mobile` (`mobile`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin COMMENT='用户表';
+
+insert into user(username, avatar, mobile) values ('张三', 'https://beyond-blog.oss-cn-beijing.aliyuncs.com/avatar/2021/01/01/1609488000.jpg', '13800138000');
