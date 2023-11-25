@@ -1,6 +1,6 @@
-Name: applet-api
+Name: article-api
 Host: 0.0.0.0
-Port: 9090
+Port: 9092
 Auth:
   AccessSecret: xxxxxxxxxxxxxxxxxxxxxxxxxxxxx
   AccessExpire: 604800
@@ -18,3 +18,20 @@ ArticleRPC:
       - 127.0.0.1:2379
     Key: article.rpc
   NonBlock: true
+UserRPC:
+  Etcd:
+    Hosts:
+      - 127.0.0.1:2379
+    Key: user.rpc
+  NonBlock: true
+Consul:
+  Host: 127.0.0.1:8500
+  Key: article-api
+  Meta:
+    env: test
+    service_group: beyond
+    service_name: article-api
+Prometheus:
+  Host: 0.0.0.0
+  Port: 9101
+  Path: /metrics

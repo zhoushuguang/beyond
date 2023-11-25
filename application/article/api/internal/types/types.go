@@ -15,3 +15,16 @@ type PublishRequest struct {
 type PublishResponse struct {
 	ArticleId int64 `json:"article_id"`
 }
+
+type ArticleDetailRequest struct {
+	ArticleId int64 `form:"article_id"`
+}
+
+type ArticleDetailResponse struct {
+	Title       string `json:"title"`
+	Content     string `json:"content"`
+	Description string `json:"description"`
+	Cover       string `json:"cover"`
+	AuthorId    string `json:"author_id"`
+	AuthorName  string `json:"author_name"`
+}

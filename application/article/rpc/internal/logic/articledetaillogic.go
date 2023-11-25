@@ -1,10 +1,10 @@
 package logic
 
 import (
-	"context"
-
 	"beyond/application/article/rpc/internal/svc"
 	"beyond/application/article/rpc/pb"
+	"context"
+	"errors"
 
 	"github.com/zeromicro/go-zero/core/logx"
 	"github.com/zeromicro/go-zero/core/stores/sqlx"
@@ -27,16 +27,21 @@ func NewArticleDetailLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Art
 func (l *ArticleDetailLogic) ArticleDetail(in *pb.ArticleDetailRequest) (*pb.ArticleDetailResponse, error) {
 	article, err := l.svcCtx.ArticleModel.FindOne(l.ctx, in.ArticleId)
 	if err != nil {
-		if err == sqlx.ErrNotFound {
+		if errors.Is(err, sqlx.ErrNotFound) {
 			return &pb.ArticleDetailResponse{}, nil
 		}
 		return nil, err
 	}
-
 	return &pb.ArticleDetailResponse{
 		Article: &pb.ArticleItem{
-			Id:    article.Id,
-			Title: article.Title,
+			Id:          article.Id,
+			Title:       article.Title,
+			Content:     article.Content,
+			Description: article.Description,
+			Cover:       article.Cover,
+			AuthorId:    article.AuthorId,
+			LikeCount:   article.LikeNum,
+			PublishTime: article.PublishTime.Unix(),
 		},
 	}, nil
 }
