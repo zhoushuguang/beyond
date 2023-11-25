@@ -47,7 +47,7 @@ func (l *FollowLogic) Follow(in *pb.FollowRequest) (*pb.FollowResponse, error) {
 		return nil, err
 	}
 	if follow != nil && follow.FollowStatus == types.FollowStatusFollow {
-		return nil, nil
+		return &pb.FollowResponse{}, nil
 	}
 	// 事务
 	err = l.svcCtx.DB.Transaction(func(tx *gorm.DB) error {
