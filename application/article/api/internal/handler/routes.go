@@ -27,6 +27,11 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				Path:    "/detail",
 				Handler: ArticleDetailHandler(serverCtx),
 			},
+			{
+				Method:  http.MethodGet,
+				Path:    "/list",
+				Handler: ArticleListHandler(serverCtx),
+			},
 		},
 		//rest.WithJwt(serverCtx.Config.Auth.AccessSecret),
 		rest.WithPrefix("/v1/article"),
