@@ -80,3 +80,13 @@ func (m *FollowModel) FindByFollowedUserIds(ctx context.Context, userId int64, f
 
 	return result, err
 }
+
+func (m *FollowModel) FindByFollowedUserId(ctx context.Context, userId int64, limit int) ([]*Follow, error) {
+	var result []*Follow
+	err := m.db.WithContext(ctx).
+		Where("followed_user_id = ? AND follow_status = ?", userId, 1).
+		Order("id desc").
+		Limit(limit).
+		Find(&result).Error
+	return result, err
+}
