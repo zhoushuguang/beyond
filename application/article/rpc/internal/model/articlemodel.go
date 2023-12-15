@@ -15,7 +15,7 @@ type (
 	// and implement the added methods in customArticleModel.
 	ArticleModel interface {
 		articleModel
-		ArticlesByUserId(ctx context.Context, userId, likeNum int64, pubTime, sortField string, limit int) ([]*Article, error)
+		ArticlesByUserId(ctx context.Context, userId int64, status int, likeNum int64, pubTime, sortField string, limit int) ([]*Article, error)
 		UpdateArticleStatus(ctx context.Context, id int64, status int) error
 	}
 
@@ -31,7 +31,7 @@ func NewArticleModel(conn sqlx.SqlConn, c cache.CacheConf, opts ...cache.Option)
 	}
 }
 
-func (m *customArticleModel) ArticlesByUserId(ctx context.Context, userId, likeNum int64, pubTime, sortField string, limit int) ([]*Article, error) {
+func (m *customArticleModel) ArticlesByUserId(ctx context.Context, userId int64, status int, likeNum int64, pubTime, sortField string, limit int) ([]*Article, error) {
 	var (
 		err      error
 		sql      string
@@ -40,12 +40,12 @@ func (m *customArticleModel) ArticlesByUserId(ctx context.Context, userId, likeN
 	)
 	if sortField == "like_num" {
 		anyField = likeNum
-		sql = fmt.Sprintf("select "+articleRows+" from "+m.table+" where author_id=? and like_num < ? order by %s desc limit ?", sortField)
+		sql = fmt.Sprintf("select "+articleRows+" from "+m.table+" where author_id=? and status=? and like_num < ? order by %s desc limit ?", sortField)
 	} else {
 		anyField = pubTime
-		sql = fmt.Sprintf("select "+articleRows+" from "+m.table+" where author_id=? and publish_time < ? order by %s desc limit ?", sortField)
+		sql = fmt.Sprintf("select "+articleRows+" from "+m.table+" where author_id=? and status=? and publish_time < ? order by %s desc limit ?", sortField)
 	}
-	err = m.QueryRowsNoCacheCtx(ctx, &articles, sql, userId, anyField, limit)
+	err = m.QueryRowsNoCacheCtx(ctx, &articles, sql, userId, status, anyField, limit)
 	if err != nil {
 		return nil, err
 	}
