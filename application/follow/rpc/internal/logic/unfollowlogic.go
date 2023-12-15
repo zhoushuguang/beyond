@@ -43,10 +43,10 @@ func (l *UnFollowLogic) UnFollow(in *pb.UnFollowRequest) (*pb.UnFollowResponse, 
 		return nil, err
 	}
 	if follow == nil {
-		return nil, nil
+		return &pb.UnFollowResponse{}, nil
 	}
 	if follow.FollowStatus == types.FollowStatusUnfollow {
-		return nil, nil
+		return &pb.UnFollowResponse{}, nil
 	}
 
 	// 事务
