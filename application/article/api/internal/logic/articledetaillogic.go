@@ -27,13 +27,6 @@ func NewArticleDetailLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Art
 }
 
 func (l *ArticleDetailLogic) ArticleDetail(req *types.ArticleDetailRequest) (resp *types.ArticleDetailResponse, err error) {
-	return &types.ArticleDetailResponse{
-		Title:       "文章标题1",
-		Content:     "文章内容1",
-		Description: "文章描述1",
-		AuthorId:    "1",
-		AuthorName:  "用户1",
-	}, nil
 	articleInfo, err := l.svcCtx.ArticleRPC.ArticleDetail(l.ctx, &article.ArticleDetailRequest{
 		ArticleId: req.ArticleId,
 	})
