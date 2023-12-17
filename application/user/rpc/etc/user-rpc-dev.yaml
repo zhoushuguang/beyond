@@ -1,0 +1,22 @@
+Name: user-rpc
+ListenOn: 0.0.0.0:9090
+DataSource: root:123456@tcp(10.111.196.140:3306)/beyond_user?parseTime=true
+CacheRedis:
+  - Host: 10.103.107.10:6379
+    Pass:
+    Type: node
+BizRedis:
+  Host: 10.103.107.10:6379
+  Pass:
+  Type: node
+Consul:
+  Host: 127.0.0.1:8500
+  Key: user-rpc
+  Meta:
+    env: test
+    service_group: beyond
+    service_name: user-rpc
+Prometheus:
+  Host: 0.0.0.0
+  Port: 9103
+  Path: /metrics

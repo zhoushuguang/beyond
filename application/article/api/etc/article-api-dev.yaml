@@ -13,17 +13,11 @@ Oss:
   AccessKeySecret: xxxxxxxxxxxxxxxxxxxx
   BucketName: beyond-article
 ArticleRPC:
-  Etcd:
-    Hosts:
-      - 127.0.0.1:2379
-    Key: article.rpc
-  NonBlock: true
+  Target: k8s://beyond/article-rpc:9090
+  NonBlock: false
 UserRPC:
-  Etcd:
-    Hosts:
-      - 127.0.0.1:2379
-    Key: user.rpc
-  NonBlock: true
+  Target: k8s://beyond/user-rpc:9090
+  NonBlock: false
 Prometheus:
   Host: 0.0.0.0
   Port: 9101

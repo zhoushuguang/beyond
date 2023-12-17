@@ -80,6 +80,16 @@ https://www.bilibili.com/video/BV11u4y1Y7GC/
 #### 文档
 https://pwmzlkcu3p.feishu.cn/docx/QZcKdB4VXoUCRDxGilfcTaw7n8e
 #### 视频
+https://www.bilibili.com/video/BV1u64y177rL
 
+### 第十三课
+#### 文档
+https://pwmzlkcu3p.feishu.cn/docx/BDNUdhmP4oec6ix1P1ZcqF3rnIc
+#### 视频
+https://www.bilibili.com/video/BV1bH4y1C7Uj
+
+### 第十四课
+#### 文档
+https://pwmzlkcu3p.feishu.cn/docx/Ydd4dG8OSobJ1rxJFgacOBKvnSg
 
 
