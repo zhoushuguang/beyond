@@ -6,7 +6,6 @@ import (
 	"beyond/application/user/rpc/user"
 
 	"github.com/aliyun/aliyun-oss-go-sdk/oss"
-	"github.com/zeromicro/go-zero/zrpc"
 )
 
 const (
@@ -35,9 +34,9 @@ func NewServiceContext(c config.Config) *ServiceContext {
 	}
 
 	return &ServiceContext{
-		Config:     c,
-		OssClient:  oc,
-		ArticleRPC: article.NewArticle(zrpc.MustNewClient(c.ArticleRPC)),
-		UserRPC:    user.NewUser(zrpc.MustNewClient(c.UserRPC)),
+		Config:    c,
+		OssClient: oc,
+		//ArticleRPC: article.NewArticle(zrpc.MustNewClient(c.ArticleRPC)),
+		//UserRPC:    user.NewUser(zrpc.MustNewClient(c.UserRPC)),
 	}
 }
