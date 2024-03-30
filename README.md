@@ -1,8 +1,8 @@
 # beyond
 
-## 微信
+## 微信公众号
 
-15951703783 备注: 我爱golang
+![qrcode_for_gh_884b10e30cf6_344](https://github.com/zhoushuguang/beyond/assets/16539942/3a6801d9-ebf9-4a0f-a141-2f410b001f7e)
 
 ## 架构图
 
