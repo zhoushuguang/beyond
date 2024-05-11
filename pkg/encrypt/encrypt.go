@@ -45,9 +45,5 @@ func Md5Sum(data []byte) string {
 }
 
 func byte16ToBytes(in [16]byte) []byte {
-	tmp := make([]byte, 16)
-	for _, value := range in {
-		tmp = append(tmp, value)
-	}
-	return tmp[16:]
+	return in[:]
 }
