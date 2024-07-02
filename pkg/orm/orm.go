@@ -31,23 +31,14 @@ func (l *ormLog) LogMode(level logger.LogLevel) logger.Interface {
 }
 
 func (l *ormLog) Info(ctx context.Context, format string, v ...interface{}) {
-	if l.LogLevel < logger.Info {
-		return
-	}
 	logx.WithContext(ctx).Infof(format, v...)
 }
 
 func (l *ormLog) Warn(ctx context.Context, fromat string, v ...interface{}) {
-	if l.LogLevel < logger.Warn {
-		return
-	}
 	logx.WithContext(ctx).Infof(fromat, v...)
 }
 
 func (l *ormLog) Error(ctx context.Context, format string, v ...interface{}) {
-	if l.LogLevel < logger.Error {
-		return
-	}
 	logx.WithContext(ctx).Errorf(format, v...)
 }
 
