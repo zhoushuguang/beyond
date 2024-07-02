@@ -31,7 +31,7 @@ func (l *ArticleLikeNumLogic) Consume(_, val string) error {
 	var msg *types.CanalLikeMsg
 	err := json.Unmarshal([]byte(val), &msg)
 	if err != nil {
-		logx.Errorf("Consume val: %s error: %v", val, err)
+		l.Logger.Errorf("Consume val: %s error: %v", val, err)
 		return err
 	}
 
@@ -49,12 +49,12 @@ func (l *ArticleLikeNumLogic) updateArticleLikeNum(ctx context.Context, msg *typ
 		}
 		id, err := strconv.ParseInt(d.ObjID, 10, 64)
 		if err != nil {
-			logx.Errorf("strconv.ParseInt id: %s error: %v", d.ID, err)
+			l.Logger.Errorf("strconv.ParseInt id: %s error: %v", d.ID, err)
 			continue
 		}
 		likeNum, err := strconv.ParseInt(d.LikeNum, 10, 64)
 		if err != nil {
-			logx.Errorf("strconv.ParseInt likeNum: %s error: %v", d.LikeNum, err)
+			l.Logger.Errorf("strconv.ParseInt likeNum: %s error: %v", d.LikeNum, err)
 			continue
 		}
 		err = l.svcCtx.ArticleModel.UpdateLikeNum(ctx, id, likeNum)
