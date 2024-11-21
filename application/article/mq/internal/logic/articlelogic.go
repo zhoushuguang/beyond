@@ -31,11 +31,11 @@ func NewArticleLogic(ctx context.Context, svcCtx *svc.ServiceContext) *ArticleLo
 }
 
 func (l *ArticleLogic) Consume(_, val string) error {
-	logx.Infof("Consume msg val: %s", val)
+	l.Logger.Infof("Consume msg val: %s", val)
 	var msg *types.CanalArticleMsg
 	err := json.Unmarshal([]byte(val), &msg)
 	if err != nil {
-		logx.Errorf("Consume val: %s error: %v", val, err)
+		l.Logger.Errorf("Consume val: %s error: %v", val, err)
 		return err
 	}
 
@@ -50,11 +50,11 @@ func (l *ArticleLogic) articleOperate(msg *types.CanalArticleMsg) error {
 	var esData []*types.ArticleEsMsg
 	for _, d := range msg.Data {
 		status, _ := strconv.Atoi(d.Status)
-		likNum, _ := strconv.ParseInt(d.LikeNum, 10, 64)
+		likeNum, _ := strconv.ParseInt(d.LikeNum, 10, 64)
 		articleId, _ := strconv.ParseInt(d.ID, 10, 64)
 		authorId, _ := strconv.ParseInt(d.AuthorId, 10, 64)
 
-		t, err := time.ParseInLocation("2006-01-02 15:04:05", d.PublishTime, time.Local)
+		t, err := time.ParseInLocation(time.DateTime, d.PublishTime, time.Local)
 		publishTimeKey := articlesKey(d.AuthorId, 0)
 		likeNumKey := articlesKey(d.AuthorId, 1)
 
@@ -69,7 +69,7 @@ func (l *ArticleLogic) articleOperate(msg *types.CanalArticleMsg) error {
 			}
 			b, _ = l.svcCtx.BizRedis.ExistsCtx(l.ctx, likeNumKey)
 			if b {
-				_, err = l.svcCtx.BizRedis.ZaddCtx(l.ctx, likeNumKey, likNum, d.ID)
+				_, err = l.svcCtx.BizRedis.ZaddCtx(l.ctx, likeNumKey, likeNum, d.ID)
 				if err != nil {
 					l.Logger.Errorf("ZaddCtx key: %s req: %v error: %v", likeNumKey, d, err)
 				}
@@ -101,7 +101,7 @@ func (l *ArticleLogic) articleOperate(msg *types.CanalArticleMsg) error {
 			Content:     d.Content,
 			Description: d.Description,
 			Status:      status,
-			LikeNum:     likNum,
+			LikeNum:     likeNum,
 		})
 	}
 	err := l.BatchUpSertToEs(l.ctx, esData)
